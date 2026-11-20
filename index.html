@@ -49,14 +49,14 @@ h1,h2,h3,p{margin:0}h1{font-size:92px;line-height:1;letter-spacing:-.055em}h2{fo
   <article class="page retrieve">
     <div class="project-no">PROJECT 01</div><div class="project-head"><div><div class="eyebrow">ENEMY AI / COMBAT</div><h2 style="margin-top:10px">Retrieve</h2><span class="badge">Unreal 7회차 최종 프로젝트 · 최우수상</span></div></div>
     <div class="meta-strip">기간 2026.05~07 · 팀 8인 · 역할 Enemy AI·전투 · UE5.7 / C++ / StateTree / GAS / AIPerception</div>
-    <p class="summary">원소를 흡수·해방하며 지역을 탐험하고 보스를 공략하는 오픈월드 액션 RPG입니다. Enemy가 공유하는 인지·상태 전달·행동 실행 흐름과 다수 Enemy의 포위·공격 조율을 담당했습니다.</p>
+    <p class="summary">원소를 흡수·해방하며 지역을 탐험하고 보스를 공략하는 오픈월드 액션 RPG입니다. 저는 몬스터가 플레이어를 감지한 뒤 행동을 선택하고 공격하는 공통 흐름을 만들었습니다. 여러 몬스터가 플레이어 주변에 몰리거나 동시에 공격하는 문제도 맡았습니다.</p>
     <table class="summary-table"><thead><tr><th>담당 파트</th><th>문제 해결과 확장된 관점</th></tr></thead><tbody>
-      <tr><td>AIPerception·StateTree·GAS 공통 AI<small>Sight·Damage 감지와 상태 전이</small></td><td>GAS의 동적 태그가 StateTree에 자동 전달되지 않는 문제를 Evaluator의 InstanceData 갱신 경로로 해결했습니다. 판단과 실행의 경계를 분리해 팀원이 같은 기반 위에서 Enemy별 행동을 확장할 수 있게 했습니다.</td></tr>
+      <tr><td>AIPerception·StateTree·GAS 공통 AI<small>Sight·Damage 감지와 상태 전이</small></td><td>공격·피격 상태를 나타내는 태그가 AI의 상태 판단 로직에 전달되지 않는 문제를 추적했습니다. Evaluator가 태그를 몬스터별 데이터로 복사하도록 수정했습니다. 판단과 실행의 경계를 분리해 팀원이 같은 기반 위에서 Enemy별 행동을 확장할 수 있게 했습니다.</td></tr>
       <tr><td>오브젝트 풀링 리스폰<small>Spawn/Despawn Radius와 상태 초기화</small></td><td>주기적 거리 검사와 생성·삭제를 Collision 이벤트와 재사용 구조로 전환했습니다. 사망 타이머를 개체별로 분리하고 HP·AI·상태이상을 복구해 이전 교전 상태가 다음 조우에 남지 않게 했습니다.</td></tr>
       <tr><td>태그·데이터 기반 공격 다중화<small>가디언 페이즈와 패턴 선택</small></td><td>BasicAttack 전용 경로를 제거하고 공격 태그·거리·쿨다운·우선순위로 패턴을 고르도록 통합했습니다. StateTree는 유지한 채 데이터 교체만으로 페이즈별 공격 구성이 달라집니다.</td></tr>
       <tr><td>Suspicious 인식 흐름<small>AIPerception 기억과 현재 관측 분리</small></td><td>MaxAge 동안 남는 Sight 자극을 현재 시야로 오인한 문제를 거리·LOS 재확인과 기억 초기화로 보완했습니다.</td></tr>
       <tr><td>Poise 기반 보스 그로기<small>패턴 파훼와 누적 피해의 결합</small></td><td>Counter Window 외에도 누적 피해로 같은 Groggy 흐름에 진입하도록 구성했습니다. 페이즈 전환 타격이 새 Poise를 다시 깎는 경계 오류도 차단했습니다.</td></tr>
-      <tr><td>포위 슬롯·AttackToken<small>다수 Enemy 위치와 공격 참여 조율</small></td><td>360도 10개 슬롯으로 접근 위치를 분산하고 비용·예산형 AttackToken으로 동시 공격을 제한했습니다. 상태 평가는 가능 여부만 확인하고 실제 행동이 토큰을 소유하도록 책임을 나눴습니다.</td></tr>
+      <tr><td>포위 슬롯·AttackToken<small>다수 Enemy 위치와 공격 참여 조율</small></td><td>플레이어 주변을 10개 위치로 나눠 접근 방향을 분산했습니다. 공격 참여 권한인 AttackToken에 비용과 전체 예산을 두어 동시 공격을 제한했습니다. 상태 평가는 가능 여부만 확인하고 실제 행동이 토큰을 소유하도록 책임을 나눴습니다.</td></tr>
     </tbody></table>
     <div class="footer"><span>Retrieve · 핵심 담당 범위 요약</span><span>03</span></div>
   </article>
@@ -86,7 +86,7 @@ CurrentAttackCost + RequestCost
   <article class="page vigilant">
     <div class="project-no">PROJECT 02</div><div class="eyebrow">MULTIPLAYER MISSION</div><h2 style="margin-top:10px">Vigilant</h2>
     <div class="meta-strip">기간 2026.04~05 · 팀 6인 · 역할 미션 시스템·기믹 · UE5 / C++ / GameplayTag / Replication</div>
-    <p class="summary">5~6인 멀티플레이 소셜 디덕션 액션 게임입니다. 미션의 완료 조건과 기믹의 상태 관리를 분리하고, 서버가 판정한 결과를 클라이언트가 동일하게 표현하도록 복제 흐름을 구성했습니다.</p>
+    <p class="summary">5~6명이 함께 플레이하는 소셜 디덕션 액션 게임입니다. 저는 미션과 상호작용 장치를 맡았습니다. 장치마다 자신의 상태를 관리하고 미션은 완료 조건을 판단하도록 나눴으며, 서버의 판정 결과가 각 플레이어에게 같게 보이도록 연결했습니다.</p>
     <table class="summary-table"><thead><tr><th>담당 파트</th><th>문제 해결과 확장된 관점</th></tr></thead><tbody>
       <tr><td>반격 샌드백<small>서버 권한 상태 머신·RepNotify</small></td><td>Blueprint에 얽힌 피격·회전·타격·복귀를 4개 상태의 C++ 흐름으로 분리했습니다. 서버가 상태와 넉백을 판정하고 클라이언트는 복제된 값으로 표현합니다.</td></tr>
       <tr><td>이벤트 기반 미션 구조<small>기믹과 완료 규칙의 분리</small></td><td>기믹은 자신의 상태만 관리하고 Delegate로 알리며, 미션이 순서·시간·전체 완료를 판정합니다. UI는 개별 기믹을 직접 알지 않고 복제 상태를 구독합니다.</td></tr>
@@ -108,10 +108,10 @@ CurrentAttackCost + RequestCost
   <article class="page shadow">
     <div class="project-no">PROJECT 03</div><div class="eyebrow">BEHAVIOR TREE AI</div><h2 style="margin-top:10px">그림자의 관</h2>
     <div class="meta-strip">기간 2026.02~03 · 팀 5인 · 역할 Enemy AI·Boss·Special Attack · UE5.5 / C++ / BehaviorTree / Blackboard / AIPerception</div>
-    <p class="summary">TPS 서바이벌 슈터에서 State 기반 AI를 Behavior Tree로 단계적으로 전환하고, 공유 설정과 개체별 실행 상태를 분리해 보스와 특수공격을 확장했습니다.</p>
+    <p class="summary">TPS 서바이벌 슈터의 몬스터 AI와 보스 공격을 맡았습니다. 기존 상태별 코드를 한 번에 교체하지 않고 행동 단위로 Behavior Tree에 옮겼습니다. 여러 몬스터가 함께 쓰는 공격 설정과 각 몬스터의 현재 상태도 분리했습니다.</p>
     <table class="summary-table"><thead><tr><th>담당 파트</th><th>문제 해결과 확장된 관점</th></tr></thead><tbody>
       <tr><td>FSM → Behavior Tree<small>Task·Decorator·Service 역할 분리</small></td><td>Controller와 State에 흩어진 전이 조건을 Blackboard 경계로 모았습니다. 전투 흐름을 한 번에 교체하지 않고 기능 단위로 이전한 뒤 기존 State 6종을 제거했습니다.</td></tr>
-      <tr><td>특수공격 상태 분리<small>PrimaryDataAsset와 Component</small></td><td>여러 Enemy가 공유하는 DataAsset에서 변하는 쿨다운을 제거했습니다. 설정은 자산, 현재 공격과 남은 쿨다운은 개체별 Component가 소유합니다.</td></tr>
+      <tr><td>특수공격 상태 분리<small>PrimaryDataAsset와 Component</small></td><td>여러 몬스터가 함께 쓰는 공격 설정에서 각 몬스터의 남은 재사용 시간을 제거했습니다. 설정은 자산, 현재 공격과 남은 쿨다운은 개체별 Component가 소유합니다.</td></tr>
       <tr><td>보스·AOE·유도 Projectile<small>공격 책임 분리</small></td><td>보스 페이즈, 범위 확장과 1회 피해, 투사체 수명과 유도 이동을 각각 분리했습니다. 멈춘 발사체는 Tick·이동 컴포넌트·초기 속도를 생성 시점부터 추적했습니다.</td></tr>
       <tr><td>공유 BT Task 수정<small>개체 캐시 제거·이동 완료 Delegate</small></td><td>Task 멤버에 저장한 AI 정보가 마지막 개체로 덮이던 문제를 실행 Context와 경로 탐색 완료 이벤트로 해결했습니다.</td></tr>
     </tbody></table>
@@ -139,9 +139,9 @@ Animation Notify
   <article class="page erebus">
     <div class="project-no">PROJECT 04</div><div class="eyebrow">C++ / WINDOWS CONSOLE</div><h2 style="margin-top:10px">Erebus Tower</h2>
     <div class="meta-strip">기간 2025.12~2026.01 · 팀 5인 · 역할 MCI 사운드·스토리 연출 공동 작업 · C++17 / Windows MCI API / Console API / CSV</div>
-    <p class="summary">행동 기반 성장과 분기형 노드 맵을 결합한 콘솔 턴제 전략 로그라이크 RPG입니다. 외부 API 장치의 수명과 UTF-8 문자 단위를 추적해 사운드와 스토리 연출 흐름을 구현했습니다.</p>
+    <p class="summary">행동에 따라 성장하고 갈림길을 선택하며 진행하는 콘솔 턴제 RPG입니다. 저는 장면별 배경음·효과음 재생과 대사 연출을 함께 작업했습니다. 음악 재생 장치의 정리 시점과 한글이 포함된 문장의 출력·줄바꿈을 다뤘습니다.</p>
     <table class="summary-table"><thead><tr><th>담당 파트</th><th>문제 해결과 확장된 관점</th></tr></thead><tbody>
-      <tr><td>Windows MCI 사운드<small>alias 장치 수명과 CSV 데이터</small></td><td>동일 alias 재사용과 종료 장치 누락으로 다음 재생이 실패할 수 있었습니다. SFX는 고유 alias, BGM은 고정 alias를 사용하고 상태 조회 후 close하는 수명 경로를 구성했습니다.</td></tr>
+      <tr><td>Windows MCI 사운드<small>alias 장치 수명과 CSV 데이터</small></td><td>재생 장치를 구분하는 이름(alias)을 재사용하거나 끝난 장치를 닫지 않으면 다음 소리가 재생되지 않을 수 있었습니다. SFX는 고유 alias, BGM은 고정 alias를 사용하고 상태 조회 후 close하는 수명 경로를 구성했습니다.</td></tr>
       <tr><td>장면별 BGM 복귀<small>마지막 비상점 BGM 보관</small></td><td>상점을 나온 뒤에도 상점 음악이 이어지는 문제를 이전 BGM ID 보관과 층별 데이터 보완으로 해결했습니다.</td></tr>
       <tr><td>UTF-8 타이핑 출력<small>기존 TextRenderer 확장</small></td><td>첫 바이트 패턴으로 UTF-8 문자를 1~4바이트 단위로 판별하고 자동 줄바꿈과 타이핑 위치를 완성된 문자 기준으로 이동했습니다.</td></tr>
       <tr><td>스토리 진행 흐름<small>CSV·화자·ASCII 아트·BGM</small></td><td>완료 상태의 기준 불일치로 다음 대사가 진행되지 않던 문제를 수정하고, 입력을 통한 타이핑 건너뛰기와 장면 전환을 연결했습니다.</td></tr>
@@ -161,7 +161,7 @@ Animation Notify
   <article class="page holocure">
     <div class="project-no">PROJECT 05</div><div class="eyebrow">C++ / DIRECTX 11</div><h2 style="margin-top:10px">HoloCure_Imitation</h2>
     <div class="meta-strip">기간 2024.05~2025.01 · 1인 개인 프로젝트 · C++ / DirectX 11 / HLSL / ImGui</div>
-    <p class="summary">HoloCure를 참고해 게임 루프, 렌더링, 충돌, 전투와 UI를 직접 구성한 뱀서라이크 프로젝트입니다. 제한된 기간 안에 구현 범위를 넓히는 과정에서 다수 객체의 공간 조회, 공유 리소스와 프레임 갱신 순서를 다뤘습니다.</p>
+    <p class="summary">HoloCure를 참고해 C++와 DirectX 11로 혼자 만든 2D 액션 게임입니다. 게임 루프부터 화면 출력, 전투, UI까지 직접 구현했습니다. 적과 아이템이 많아졌을 때 느려지는 문제를 조사했고, 같은 화면 리소스를 공유하는 방식과 카메라·UI의 갱신 순서도 손봤습니다.</p>
     <table class="summary-table"><thead><tr><th>담당 파트</th><th>문제 해결과 확장된 관점</th></tr></thead><tbody>
       <tr><td>Spatial Partition<small>100×100 Cell·인접 8개 Cell</small></td><td>객체 증가로 FPS가 한 자리까지 떨어지자 현재 Cell과 주변 8개 Cell로 후보를 제한했습니다. 첫 적용은 오히려 느려졌고, Enemy 밀어내기와 Item 병합처럼 접점 정보가 필요 없는 검사를 중심 거리·크기 비교로 바꾼 뒤 프레임 감소 문제를 해결했습니다.</td></tr>
       <tr><td>Frame 리소스 공유<small>static Frame Set·shared_ptr</small></td><td>같은 종류의 객체가 중복 보관하던 Frame을 클래스 단위로 공유하고, 위치·활성 상태 등 런타임 값은 인스턴스마다 유지했습니다.</td></tr>
@@ -186,6 +186,21 @@ for (int x = -1; x <= 1; ++x)
 if (CenterDistance <= CombinedSize)
     ResolveSeparationOrMerge();</pre></div><div class="timeline"><div class="step"><b>문제</b><p>객체가 늘자 FPS가 한 자리까지 떨어졌고, 처음 도입한 공간 분할도 성능을 악화시켰습니다.</p></div><div class="step"><b>고민</b><p>후보 수뿐 아니라 후보마다 수행하는 정밀 충돌 검사의 비용을 함께 줄여야 했습니다.</p></div><div class="step"><b>변경</b><p>Enemy 밀어내기와 Item 병합은 접점 정보가 필요 없다고 판단해 중심 거리와 Collider 크기 비교로 대체했습니다.</p></div><div class="step"><b>유지</b><p>Player 피격·Item 획득은 Cell 후보를 좁힌 뒤 기존 Collider 판정을 유지했습니다.</p></div><div class="step"><b>결과</b><p>2024.05.29 기록에서 충돌 검출 방식 변경 후 프레임 감소 문제 해결을 확인했습니다. 전후 측정 수치는 남아 있지 않습니다.</p></div></div></div>
     <div class="evidence">현재 상태: 미구현 항목과 버그가 남아 있는 미완성 프로젝트입니다. 국비지원 과정 수료 후 버그 1건을 수정했으며, 아직 리팩터링 작업은 시작하지 않았습니다.</div><div class="footer"><span>공간 조회·리소스 소유권·프레임 갱신 순서를 직접 다룬 프로젝트</span><span>15</span></div>
+  </article>
+
+  <article class="page" style="--accent:var(--blue)">
+    <div class="project-no">ONGOING STUDY</div><div class="eyebrow">DIRECTX 11 / AI-ASSISTED DEBUGGING</div>
+    <h2 style="margin-top:12px">DXStudy</h2>
+    <div class="meta-strip">진행 중 · DirectX 11 렌더링 학습 · C++ / HLSL · Gemini / Codex</div>
+    <p class="summary">DirectX 11 튜토리얼을 직접 구현하며 화면에 나타난 오류를 코드와 함께 분석하고 있습니다. AI에는 오류 화면, 관련 코드, 먼저 확인한 내용을 전달해 점검할 지점을 찾습니다. 제안된 원인은 코드와 튜토리얼을 대조하고 다시 실행해 확인합니다.</p>
+    <div class="case-grid">
+      <div class="case"><em>PROBLEM</em><h3>조명을 적용한 구가 하얗게 표시됨</h3><p>텍스처가 보이지 않는 화면과 픽셀 셰이더 코드를 Codex에 전달해 원인 후보를 검토했습니다.</p></div>
+      <div class="case"><em>CHECK</em><h3>계산식과 전달 데이터 확인</h3><p>AI가 지적한 반사광 계산식의 지수 값과 C++·HLSL 상수 버퍼의 필드 순서를 튜토리얼 및 실제 코드와 대조했습니다.</p></div>
+      <div class="case"><em>ACTION</em><h3>직접 수정하고 다시 실행</h3><p>튜토리얼과 코드를 다시 확인해 수정한 뒤, 하얗게 보이던 구의 텍스처와 조명이 정상적으로 출력되는 것을 확인했습니다.</p></div>
+      <div class="case"><em>LESSON</em><h3>AI의 안내도 확인 대상</h3><p>다른 셰이더 오류에서는 Codex가 안내한 Rider 메뉴가 실제 화면에 없었습니다. 이를 지적하고 현재 화면에서 확인되는 인코딩 메뉴 기준으로 안내를 바로잡았습니다.</p></div>
+    </div>
+    <div class="evidence">학습과 구현은 현재 진행 중입니다. AI는 점검할 지점을 찾는 데 활용하고, 수정 결과는 직접 빌드와 실행 화면으로 확인합니다.</div>
+    <div class="footer"><span>질문 → 코드 대조 → 수정 → 실행 결과 확인</span><span></span></div>
   </article>
 
   <article class="page dark">
